@@ -12,7 +12,7 @@ function Scene() {
     inclination: 0, // Adjust for time of day, affects sky color
     azimuth: 0.25, // Adjust for sun position
     turbidity: 0.5, // Affects the intensity of the sky color
-    rayleigh: 3, // Determines the amount and color of scattered light
+    rayleigh: 6, // Determines the amount and color of scattered light
     mieCoefficient: 0.005, // Affects the concentration of haze particles
     mieDirectionalG: 0.8 // Affects the directionality of haze scattering
   };

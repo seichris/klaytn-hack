@@ -47,7 +47,9 @@ export function Model(props) {
 
       onUpdate: () => {
         // Function to update the camera's focus on a specific position
-        camera.lookAt(...buildingRef.current.position);
+        if (buildingRef.current) {
+          camera.lookAt(...buildingRef.current.position);
+        }
       },
       onComplete: () => {
         setIsInitialPosition(true); // Setting the state to indicate the initial position
@@ -87,7 +89,9 @@ export function Model(props) {
               setControlsEnabled(false); // Disabling controls for smoother animation
             },
             onUpdate: () => {
-              camera.lookAt(...buildingRef.current.position); // Updating the camera's focus
+              if (buildingRef.current) {
+                camera.lookAt(...buildingRef.current.position);
+              } // Updating the camera's focus
             },
             onComplete: () => {
               setIsInitialPosition(false); // Setting the state to indicate a new position
