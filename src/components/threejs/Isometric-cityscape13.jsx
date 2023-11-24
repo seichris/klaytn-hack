@@ -3,6 +3,7 @@ import { useGLTF, PresentationControls, Html } from "@react-three/drei";
 import Car from "./Car";
 import Helicopter from "./Helicopter";
 import Birds from "./Birds";
+import Sun from './Sun';
 import { gsap } from "gsap";
 
 import { useFrame, useThree } from "@react-three/fiber";
@@ -30,6 +31,31 @@ export function Model(props) {
   const initialCameraPosition = { x: 5, y: 5.5, z: -15 };
   const [isInitialPosition, setIsInitialPosition] = useState(true);
 
+  useEffect(() => {
+    console.log("GLTF Nodes:", nodes);
+    // Rest of your code
+  }, [nodes]);
+
+  useEffect(() => {
+    // Create a sphere geometry for the sun
+    const sunGeometry = new THREE.SphereGeometry(1, 32, 32);
+    // Create a basic material with emissive color for the sun
+    const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffcc00, emissive: 0xffcc00 });
+    // Create the sun mesh
+    const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
+    // Set the relative position of the sun
+    sunMesh.position.set(1, 0.6, 10);
+    // Add the sun to the model
+    nodes.Scene.add(sunMesh); // Replace YourModelNodeName with the correct node name
+
+    // Cleanup: remove the sun from the model when the component unmounts
+    return () => {
+      nodes.Scene.remove(sunMesh);
+      sunGeometry.dispose();
+      sunMaterial.dispose();
+    };
+  }, [nodes]);
+
   const getMousePosition = (e) => {
     mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
@@ -47,7 +73,9 @@ export function Model(props) {
 
       onUpdate: () => {
         // Function to update the camera's focus on a specific position
-        camera.lookAt(...buildingRef.current.position);
+        if (buildingRef.current) {
+          camera.lookAt(...buildingRef.current.position);
+        }
       },
       onComplete: () => {
         setIsInitialPosition(true); // Setting the state to indicate the initial position
@@ -87,7 +115,9 @@ export function Model(props) {
               setControlsEnabled(false); // Disabling controls for smoother animation
             },
             onUpdate: () => {
-              camera.lookAt(...buildingRef.current.position); // Updating the camera's focus
+              if (buildingRef.current) {
+                camera.lookAt(...buildingRef.current.position);
+              } // Updating the camera's focus
             },
             onComplete: () => {
               setIsInitialPosition(false); // Setting the state to indicate a new position
@@ -210,6 +240,7 @@ export function Model(props) {
           handlePointerMove(e);
         }}
       >
+        {/* {sunVisual} */}
         <mesh
           geometry={nodes.Landskape_plane_Landscape_color_1_0002.geometry}
           material={materials["Landscape_color_1.001"]}
@@ -369,6 +400,7 @@ export function Model(props) {
         <Car />
         <Helicopter />
         <Birds />
+        <Sun />
 
         <mesh
           geometry={nodes.Cube007.geometry}
