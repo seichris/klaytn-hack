@@ -54,8 +54,12 @@ export function Model(props) {
     const sunLight = new THREE.DirectionalLight(0xFFFFAA, 1);
     const sprite = new THREE.Sprite(spriteMaterial);
     sprite.scale.set(10, 10, 1);
+    const sunScale = 1.5;
     // Create the sun mesh
     const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
+    sunMesh.scale.set(sunScale, sunScale, sunScale);
+    const spriteScale = sunScale * 5;
+    sprite.scale.set(spriteScale, spriteScale, 1);
     // Set the relative position of the sun
     sunMesh.position.set(-50, 10, 40);
     // Add the sun to the model
@@ -63,6 +67,8 @@ export function Model(props) {
     if (buildingRef.current) {
       buildingRef.current.add(sunMesh);
     }
+
+    
 
     // Cleanup: remove the sun from the model when the component unmounts
     return () => {

@@ -21,15 +21,25 @@ function Scene() {
   //   }
   // }, []);
 
-  const skySettings = {
-    distance: 450000,
-    inclination: 0.49, // Adjust for time of day, affects sky color
-    azimuth: 0.25, // Adjust for sun position
-    turbidity: 3, // Affects the intensity of the sky color
-    rayleigh: 2, // Determines the amount and color of scattered light
-    mieCoefficient: 0.005, // Affects the concentration of haze particles
-    mieDirectionalG: 0.8 // Affects the directionality of haze scattering
-  };
+  // const skySettings = {
+  //   distance: 450000,
+  //   inclination: 0.49, // Adjust for time of day, affects sky color
+  //   azimuth: 0.25, // Adjust for sun position
+  //   turbidity: 3, // Affects the intensity of the sky color
+  //   rayleigh: 2, // Determines the amount and color of scattered light
+  //   mieCoefficient: 0.005, // Affects the concentration of haze particles
+  //   mieDirectionalG: 0.8 // Affects the directionality of haze scattering
+  // };
+
+  const [skySettings, setSkySettings] = useState({
+    inclination: 0.5,
+    azimuth: 0.44,
+    turbidity: 5.5,
+    rayleigh: 4.9,
+    mieCoefficient: 0.0124,
+    mieDirectionalG: 0.38,
+    lightIntensity: 6.3,
+  });
 
   useEffect(() => {
     if (modelRef.current) {
@@ -39,39 +49,51 @@ function Scene() {
 
   useEffect(() => {
     const gui = new dat.GUI();
-    const sceneOptions = {
-      // Existing options
-      rotationSpeed: 0.01,
-      // Sky settings
-      inclination: skySettings.inclination,
-      azimuth: skySettings.azimuth,
-      turbidity: skySettings.turbidity,
-      // Light properties
-      lightIntensity: 6,
-      // Fog properties
-      fogNear: 1,
-      fogFar: 90,
-      // Depth of Field
-      focalLength: 0.03,
-      bokehScale: 8,
-    };
-  
-    gui.add(sceneOptions, 'rotationSpeed', 0, 0.1);
-    gui.add(sceneOptions, 'inclination', 0, 1).onChange(value => {
-      skySettings.inclination = value;
-    });
-    gui.add(sceneOptions, 'azimuth', 0, 1);
-    gui.add(sceneOptions, 'turbidity', 0, 20);
-    gui.add(sceneOptions, 'lightIntensity', 0, 10);
-    gui.add(sceneOptions, 'fogNear', 1, 100);
-    gui.add(sceneOptions, 'fogFar', 10, 200);
-    gui.add(sceneOptions, 'focalLength', 0.01, 0.1);
-    gui.add(sceneOptions, 'bokehScale', 1, 10);
-  
-    // ... add more controls as needed
-  
+    gui.add(skySettings, 'inclination', 0, 1).onChange(value => setSkySettings(s => ({ ...s, inclination: value })));
+    gui.add(skySettings, 'azimuth', 0, 1).onChange(value => setSkySettings(s => ({ ...s, azimuth: value })));
+    gui.add(skySettings, 'turbidity', 0, 20).onChange(value => setSkySettings(s => ({ ...s, turbidity: value })));
+    gui.add(skySettings, 'rayleigh', 0, 10).onChange(value => setSkySettings(s => ({ ...s, rayleigh: value })));
+    gui.add(skySettings, 'mieCoefficient', 0, 0.1).onChange(value => setSkySettings(s => ({ ...s, mieCoefficient: value })));
+    gui.add(skySettings, 'mieDirectionalG', 0, 1).onChange(value => setSkySettings(s => ({ ...s, mieDirectionalG: value })));
+    gui.add(skySettings, 'lightIntensity', 0, 10).onChange(value => setSkySettings(s => ({ ...s, lightIntensity: value })));
+
     return () => gui.destroy();
   }, []);
+  // useEffect(() => {
+  //   const gui = new dat.GUI();
+  //   const sceneOptions = {
+  //     // Existing options
+  //     rotationSpeed: 0.01,
+  //     // Sky settings
+  //     inclination: skySettings.inclination,
+  //     azimuth: skySettings.azimuth,
+  //     turbidity: skySettings.turbidity,
+  //     // Light properties
+  //     lightIntensity: 6,
+  //     // Fog properties
+  //     fogNear: 1,
+  //     fogFar: 90,
+  //     // Depth of Field
+  //     focalLength: 0.03,
+  //     bokehScale: 8,
+  //   };
+  
+  //   gui.add(sceneOptions, 'rotationSpeed', 0, 0.1);
+  //   gui.add(sceneOptions, 'inclination', 0, 1).onChange(value => {
+  //     skySettings.inclination = value;
+  //   });
+  //   gui.add(sceneOptions, 'azimuth', 0, 1);
+  //   gui.add(sceneOptions, 'turbidity', 0, 20);
+  //   gui.add(sceneOptions, 'lightIntensity', 0, 10);
+  //   gui.add(sceneOptions, 'fogNear', 1, 100);
+  //   gui.add(sceneOptions, 'fogFar', 10, 200);
+  //   gui.add(sceneOptions, 'focalLength', 0.01, 0.1);
+  //   gui.add(sceneOptions, 'bokehScale', 1, 10);
+  
+  //   // ... add more controls as needed
+  
+  //   return () => gui.destroy();
+  // }, []);
 
   return (
     <div className='relative w-screen h-screen'>
