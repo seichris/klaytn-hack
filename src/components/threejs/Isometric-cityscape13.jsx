@@ -3,7 +3,7 @@ import { useGLTF, PresentationControls, Html } from "@react-three/drei";
 import Car from "./Car";
 import Helicopter from "./Helicopter";
 import Birds from "./Birds";
-import Sun from './Sun';
+// import Sun from './Sun';
 import { gsap } from "gsap";
 
 import { useFrame, useThree } from "@react-three/fiber";
@@ -40,17 +40,36 @@ export function Model(props) {
     // Create a sphere geometry for the sun
     const sunGeometry = new THREE.SphereGeometry(1, 32, 32);
     // Create a basic material with emissive color for the sun
-    const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffcc00, emissive: 0xffcc00 });
+    // const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffcc00, emissive: 0xffcc00 });
+    const sunMaterial = new THREE.MeshBasicMaterial({ 
+      color: 0xFFFF00, // Bright yellow color
+      emissive: 0xFFFF00, // Emissive color to make it glow
+      emissiveIntensity: 1.5, // Increase emissive intensity
+    });
+    const spriteMaterial = new THREE.SpriteMaterial({ 
+      map: new THREE.TextureLoader().load('/path-to-glow-texture.png'),
+      transparent: true,
+      blending: THREE.AdditiveBlending
+    });
+    const sunLight = new THREE.DirectionalLight(0xFFFFAA, 1);
+    const sprite = new THREE.Sprite(spriteMaterial);
+    sprite.scale.set(10, 10, 1);
     // Create the sun mesh
     const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
     // Set the relative position of the sun
-    sunMesh.position.set(1, 0.6, 10);
+    sunMesh.position.set(-50, 10, 40);
     // Add the sun to the model
-    nodes.Scene.add(sunMesh); // Replace YourModelNodeName with the correct node name
+    // nodes.groupRef.add(sunMesh); // Replace YourModelNodeName with the correct node name
+    if (buildingRef.current) {
+      buildingRef.current.add(sunMesh);
+    }
 
     // Cleanup: remove the sun from the model when the component unmounts
     return () => {
-      nodes.Scene.remove(sunMesh);
+      // nodes.groupRef.remove(sunMesh);
+      if (buildingRef.current) {
+        buildingRef.current.remove(sunMesh);
+      }
       sunGeometry.dispose();
       sunMaterial.dispose();
     };
@@ -400,7 +419,7 @@ export function Model(props) {
         <Car />
         <Helicopter />
         <Birds />
-        <Sun />
+        {/* <Sun /> */}
 
         <mesh
           geometry={nodes.Cube007.geometry}

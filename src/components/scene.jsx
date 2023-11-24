@@ -80,7 +80,7 @@ function Scene() {
           <Sky
             distance={skySettings.distance}
             // sunPosition={[-0.1, 0, 10]}
-            sunPosition={[-0.1, -0.1, 10]}
+            // sunPosition={[-0.1, -0.1, 10]}
             // ref={sunLightRef}
             inclination={skySettings.inclination}
             azimuth={skySettings.azimuth}
