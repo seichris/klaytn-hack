@@ -81,6 +81,12 @@ button:focus-visible {
   }
 }
 
+.panel-box {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
 .control-panel button {
   background-color: black;
   color: white;
@@ -101,4 +107,9 @@ button:focus-visible {
   display: flex; /* Align buttons in a row */
   align-items: center; /* Center-align buttons vertically */
   justify-content: center; /* Center them horizontally if needed */
+}
+
+.status-display {
+  margin-top: 10px;
+  text-align: center;
 }
