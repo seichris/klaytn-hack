@@ -1,54 +1,46 @@
 import React, { useRef, useEffect } from "react";
+import * as THREE from 'three';
+import { useLoader, useFrame } from "@react-three/fiber";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { useLoader } from "@react-three/fiber";
-import { useFrame } from "@react-three/fiber";
-import gsap from "gsap";
 
 function Helicopter() {
   const helicopterRef = useRef();
   const dracoLoader = new DRACOLoader();
   dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
-  const gltf = useLoader(GLTFLoader, "/models/helicoptero.glb", (loader) => {
+  const gltf = useLoader(GLTFLoader, "/models/helicoptero.glb", loader => {
     loader.setDRACOLoader(dracoLoader);
   });
 
-  const animateHelicopter = () => {
-    if (!helicopterRef.current) return;
-    gsap.to(helicopterRef.current.position, {
-      duration: 25,
-      x: -25,
-      y: 5.4,
-      z: -0.6,
-      onComplete: () => {
-        // Reset the position of the helicopter
-        gsap.set(helicopterRef.current?.position, {
-          x: -8.2,
-          y: 3.4,
-          z: -6.6,
-        });
-        // Restart the animation
-        animateHelicopter();
-      },
-    });
-  };
+  // Circle parameters
+  const circleRadius = 20;
+  const circleCenter = new THREE.Vector3(0, 5, 0);
+  let angle = 0;
 
-  useEffect(() => {
-    if (helicopterRef.current) {
-      animateHelicopter();
-    }
-  }, []);
-
-  const helice = gltf.scene.getObjectByName("Helice");
   useFrame(() => {
-    helice.rotation.y += 0.5;
+    // Slow down the movement by reducing the angle increment
+    angle += 0.01 / 3;
+
+    // Update position
+    helicopterRef.current.position.x = circleCenter.x + circleRadius * Math.cos(angle);
+    helicopterRef.current.position.z = circleCenter.z + circleRadius * Math.sin(angle);
+
+    // Update rotation to face the forward direction
+    // Adjust the offset based on the model's forward direction
+    helicopterRef.current.rotation.y = -angle;
+
+    // Update rotor rotation
+    const helice = gltf.scene.getObjectByName("Helice");
+    if (helice) {
+      helice.rotation.y += 0.5;
+    }
   });
 
   return (
     <group
       ref={helicopterRef}
-      position={[-8.2, 3.4, -6.6]}
-      rotation={[0, 5.5, 0]}
+      position={[circleCenter.x + circleRadius, circleCenter.y, circleCenter.z]}
+      rotation={[0, 0, 0]} // Initially facing the direction of movement
     >
       <primitive object={gltf.scene} dispose={null} scale={1} />
     </group>

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useMemo } from "react";
 import { useGLTF, PresentationControls, Html } from "@react-three/drei";
 import Car from "./Car";
 import Helicopter from "./Helicopter";
@@ -30,6 +30,10 @@ export function Model(props) {
   const mouse = new THREE.Vector2();
   const initialCameraPosition = { x: 5, y: 5.5, z: -15 };
   const [isInitialPosition, setIsInitialPosition] = useState(true);
+  const windowMaterial = useMemo(() => 
+    props.lightsOn ? materials.WindowLightBlue : materials.BlackoutWindow,
+    [props.lightsOn]
+  );
 
   useEffect(() => {
     console.log("GLTF Nodes:", nodes);
@@ -194,20 +198,18 @@ export function Model(props) {
 
   // A frame update function handling the rotation of specified references
   useFrame(() => {
-    // Check if the ferrisWheelRef is available and rotate it around the y-axis
+    // Ferris wheel rotation
     if (ferrisWheelRef.current) {
-      ferrisWheelRef.current.rotation.y += 0.03;
+      ferrisWheelRef.current.rotation.y += props.ferrisWheelSpeed;
     }
-
-    // Check each windFanRef for availability and rotate them around the z-axis
-    if (windFanRefs.some((ref) => ref.current)) {
-      windFanRefs.forEach((ref) => {
-        if (ref.current) {
-          ref.current.rotation.z += 0.1;
-        }
-      });
-    }
-  });
+  
+    // Wind fans rotation
+    windFanRefs.forEach((ref) => {
+      if (ref.current) {
+        ref.current.rotation.z += props.windFanSpeed;
+      }
+    });
+  }); 
 
   const handlePointerMove = (e) => {
     getMousePosition(e); // Getting the mouse position
@@ -448,7 +450,7 @@ export function Model(props) {
           />
           <mesh
             geometry={nodes.CircleBuildBase003_2.geometry}
-            material={materials.WindowLightBlue}
+            material={windowMaterial}
           />
           <mesh
             geometry={nodes.CircleBuildBase003_3.geometry}
@@ -464,7 +466,7 @@ export function Model(props) {
           />
           <mesh
             geometry={nodes.CircleBuildBase003_6.geometry}
-            material={materials.WindowLightBlue}
+            material={windowMaterial}
           />
         </group>
         <group
@@ -500,7 +502,7 @@ export function Model(props) {
             />
             <mesh
               geometry={nodes.Cube037_2.geometry}
-              material={materials.WindowLightBlue}
+              material={windowMaterial}
             />
           </group>
           <mesh
@@ -520,7 +522,7 @@ export function Model(props) {
           <mesh
             name='building2'
             geometry={nodes.CircleBuildBase004_1.geometry}
-            material={materials.WindowLightBlue}
+            material={windowMaterial}
           />
           <mesh
             name='building2'
@@ -565,7 +567,7 @@ export function Model(props) {
           />
           <mesh
             geometry={nodes.CircleBuildBase001_2.geometry}
-            material={materials.WindowLightBlue}
+            material={windowMaterial}
           />
           <mesh
             geometry={nodes.CircleBuildBase001_3.geometry}
@@ -589,7 +591,7 @@ export function Model(props) {
           />
           <mesh
             geometry={nodes.CircleBuildBase001_8.geometry}
-            material={materials.WindowLightBlue}
+            material={windowMaterial}
           />
         </group>
         <group name={"model"} position={[-1.86, 0.36, -0.54]} scale={0.54}>
@@ -603,7 +605,7 @@ export function Model(props) {
           />
           <mesh
             geometry={nodes.Cube040_2.geometry}
-            material={materials.WindowLightBlue}
+            material={windowMaterial}
           />
           <mesh
             geometry={nodes.Cube040_3.geometry}
@@ -642,7 +644,7 @@ export function Model(props) {
           />
           <mesh
             geometry={nodes.Cube043_1.geometry}
-            material={materials.WindowLightBlue}
+            material={windowMaterial}
           />
           <mesh
             geometry={nodes.Cube043_2.geometry}
@@ -684,7 +686,7 @@ export function Model(props) {
           />
           <mesh
             geometry={nodes.Cube046_1.geometry}
-            material={materials.WindowLightBlue}
+            material={windowMaterial}
           />
           <mesh
             geometry={nodes.Cube046_2.geometry}
@@ -730,7 +732,7 @@ export function Model(props) {
           />
           <mesh
             geometry={nodes.Cube049_3.geometry}
-            material={materials.WindowLightBlue}
+            material={windowMaterial}
           />
           <mesh
             geometry={nodes.Cube049_4.geometry}
@@ -772,7 +774,7 @@ export function Model(props) {
           />
           <mesh
             geometry={nodes.Cube052_2.geometry}
-            material={materials.WindowLightBlue}
+            material={windowMaterial}
           />
           <mesh
             geometry={nodes.Cube052_3.geometry}
@@ -813,7 +815,7 @@ export function Model(props) {
           <mesh
             name='building3'
             geometry={nodes.Cube005_3.geometry}
-            material={materials.WindowLightBlue}
+            material={windowMaterial}
           />
           <mesh
             name='building3'
@@ -848,7 +850,7 @@ export function Model(props) {
           <mesh
             name='building3'
             geometry={nodes.Cube005_10.geometry}
-            material={materials.WindowLightBlue}
+            material={windowMaterial}
           />
           <mesh
             name='building3'
@@ -865,7 +867,7 @@ export function Model(props) {
           <mesh
             name='building1'
             geometry={nodes.CircleBuildBase002_2.geometry}
-            material={materials.WindowLightBlue}
+            material={windowMaterial}
           />
           <mesh
             name='building1'
@@ -900,11 +902,11 @@ export function Model(props) {
           />
           <mesh
             geometry={nodes.Cube038_1.geometry}
-            material={materials.BuildingOrange}
+            material={materials.BlackoutWindow}
           />
           <mesh
             geometry={nodes.Cube038_2.geometry}
-            material={materials.WindowLightBlue}
+            material={windowMaterial}
           />
           <mesh
             geometry={nodes.Cube038_3.geometry}
@@ -918,7 +920,7 @@ export function Model(props) {
           />
           <mesh
             geometry={nodes.Cone003_1.geometry}
-            material={materials.WindowLightBlue}
+            material={windowMaterial}
           />
           <mesh
             geometry={nodes.Cone003_2.geometry}
@@ -947,7 +949,7 @@ export function Model(props) {
             />
             <mesh
               geometry={nodes.Cylinder002_1.geometry}
-              material={materials.WindowLightBlue}
+              material={windowMaterial}
             />
           </group>
         </group>

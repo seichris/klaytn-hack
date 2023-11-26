@@ -4,6 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import { EffectComposer, DepthOfField } from "@react-three/postprocessing";
 import { Sky, Cloud } from "@react-three/drei";
 import { Model } from "./threejs/Isometric-cityscape13";
+import { ControlPanel } from "./Panel";
 import Loader from "./Loader";
 // import { MeshBasicMaterial, SphereGeometry, Mesh } from 'three';
 import { Environment } from "@react-three/drei";
@@ -13,6 +14,68 @@ function Scene() {
   const modelRef = useRef();
   const sunLightRef = useRef();
   const sunVisualRef = useRef();
+  const [lightsOn, setLightsOn] = useState(true);
+  const [ferrisWheelSpeed, setFerrisWheelSpeed] = useState(0.007);
+  const [windFanSpeed, setWindFanSpeed] = useState(0.1);
+
+  const stopFerrisWheel = () => {
+    const duration = 5; // Duration in seconds for the wheel to stop
+    const frameRate = 60; // Assuming 60 frames per second
+    let framesCount = duration * frameRate;
+    let initialSpeed = ferrisWheelSpeed;
+  
+    const interval = setInterval(() => {
+      setFerrisWheelSpeed((prevSpeed) => {
+        framesCount--;
+        if (framesCount <= 0 || prevSpeed <= 0) {
+          clearInterval(interval);
+          return 0;
+        }
+        // Linearly decrease the speed
+        return initialSpeed * (framesCount / (duration * frameRate));
+      });
+    }, 1000 / frameRate); // Update speed every frame
+  };
+
+  const stopWindFans = () => {
+    const duration = 5; // Duration in seconds for the fans to stop
+    const frameRate = 60; // Assuming 60 frames per second
+    let framesCount = duration * frameRate;
+    let initialSpeed = windFanSpeed;
+  
+    const interval = setInterval(() => {
+      setWindFanSpeed((prevSpeed) => {
+        framesCount--;
+        if (framesCount <= 0 || prevSpeed <= 0) {
+          clearInterval(interval);
+          return 0;
+        }
+        return initialSpeed * (framesCount / (duration * frameRate));
+      });
+    }, 1000 / frameRate); // Update speed every frame
+  };  
+
+  const toggleLights = () => {
+    if (lightsOn) {
+      stopFerrisWheel();
+      stopWindFans(); // Add this line
+    } else {
+      setFerrisWheelSpeed(0.03);
+      setWindFanSpeed(0.1); // Reset wind fan speed
+    }
+    setLightsOn(!lightsOn);
+  };
+
+  const toggleEnergy = (energyStatus) => {
+    if (energyStatus) {
+      // Starting energy production
+      setWindFanSpeed(0.1);
+    } else {
+      // Stopping energy production
+      stopWindFans();
+    }
+  };
+  
 
   // useEffect(() => {
   //   // Synchronize the position of the visual sun with the directional light
@@ -47,54 +110,19 @@ function Scene() {
     }
   }, []);
 
-  useEffect(() => {
-    const gui = new dat.GUI();
-    gui.add(skySettings, 'inclination', 0, 1).onChange(value => setSkySettings(s => ({ ...s, inclination: value })));
-    gui.add(skySettings, 'azimuth', 0, 1).onChange(value => setSkySettings(s => ({ ...s, azimuth: value })));
-    gui.add(skySettings, 'turbidity', 0, 20).onChange(value => setSkySettings(s => ({ ...s, turbidity: value })));
-    gui.add(skySettings, 'rayleigh', 0, 10).onChange(value => setSkySettings(s => ({ ...s, rayleigh: value })));
-    gui.add(skySettings, 'mieCoefficient', 0, 0.1).onChange(value => setSkySettings(s => ({ ...s, mieCoefficient: value })));
-    gui.add(skySettings, 'mieDirectionalG', 0, 1).onChange(value => setSkySettings(s => ({ ...s, mieDirectionalG: value })));
-    gui.add(skySettings, 'lightIntensity', 0, 10).onChange(value => setSkySettings(s => ({ ...s, lightIntensity: value })));
-
-    return () => gui.destroy();
-  }, []);
   // useEffect(() => {
   //   const gui = new dat.GUI();
-  //   const sceneOptions = {
-  //     // Existing options
-  //     rotationSpeed: 0.01,
-  //     // Sky settings
-  //     inclination: skySettings.inclination,
-  //     azimuth: skySettings.azimuth,
-  //     turbidity: skySettings.turbidity,
-  //     // Light properties
-  //     lightIntensity: 6,
-  //     // Fog properties
-  //     fogNear: 1,
-  //     fogFar: 90,
-  //     // Depth of Field
-  //     focalLength: 0.03,
-  //     bokehScale: 8,
-  //   };
-  
-  //   gui.add(sceneOptions, 'rotationSpeed', 0, 0.1);
-  //   gui.add(sceneOptions, 'inclination', 0, 1).onChange(value => {
-  //     skySettings.inclination = value;
-  //   });
-  //   gui.add(sceneOptions, 'azimuth', 0, 1);
-  //   gui.add(sceneOptions, 'turbidity', 0, 20);
-  //   gui.add(sceneOptions, 'lightIntensity', 0, 10);
-  //   gui.add(sceneOptions, 'fogNear', 1, 100);
-  //   gui.add(sceneOptions, 'fogFar', 10, 200);
-  //   gui.add(sceneOptions, 'focalLength', 0.01, 0.1);
-  //   gui.add(sceneOptions, 'bokehScale', 1, 10);
-  
-  //   // ... add more controls as needed
-  
+  //   gui.add(skySettings, 'inclination', 0, 1).onChange(value => setSkySettings(s => ({ ...s, inclination: value })));
+  //   gui.add(skySettings, 'azimuth', 0, 1).onChange(value => setSkySettings(s => ({ ...s, azimuth: value })));
+  //   gui.add(skySettings, 'turbidity', 0, 20).onChange(value => setSkySettings(s => ({ ...s, turbidity: value })));
+  //   gui.add(skySettings, 'rayleigh', 0, 10).onChange(value => setSkySettings(s => ({ ...s, rayleigh: value })));
+  //   gui.add(skySettings, 'mieCoefficient', 0, 0.1).onChange(value => setSkySettings(s => ({ ...s, mieCoefficient: value })));
+  //   gui.add(skySettings, 'mieDirectionalG', 0, 1).onChange(value => setSkySettings(s => ({ ...s, mieDirectionalG: value })));
+  //   gui.add(skySettings, 'lightIntensity', 0, 10).onChange(value => setSkySettings(s => ({ ...s, lightIntensity: value })));
+
   //   return () => gui.destroy();
   // }, []);
-
+  
   return (
     <div className='relative w-screen h-screen'>
       <Canvas>
@@ -150,6 +178,9 @@ function Scene() {
           <Model
             ref={modelRef}
             setButtonText={setButtonText}
+            lightsOn={lightsOn}
+            ferrisWheelSpeed={ferrisWheelSpeed}
+            windFanSpeed={windFanSpeed}
           />
         </Suspense>
       </Canvas>
@@ -158,6 +189,7 @@ function Scene() {
           <span className='text-xl uppercase font-semibold'>{buttonText}</span>
         </div>
       )}
+      <ControlPanel onToggleLights={toggleLights} onToggleEnergy={toggleEnergy} />
     </div>
   );
 }
