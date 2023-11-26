@@ -14,12 +14,17 @@ function Scene() {
   const modelRef = useRef();
   const sunLightRef = useRef();
   const sunVisualRef = useRef();
-  const [lightsOn, setLightsOn] = useState(true);
+  // const [lightsOn, setLightsOn] = useState(true);
   const [ferrisWheelSpeed, setFerrisWheelSpeed] = useState(0.007);
   const [windFanSpeed, setWindFanSpeed] = useState(0.1);
+  const [isEnergyOn, setIsEnergyOn] = useState(true);
+  const [areLightsOn, setAreLightsOn] = useState(true);
+  const [isStoppingFerrisWheel, setIsStoppingFerrisWheel] = useState(false);
+  const [isStoppingWindFans, setIsStoppingWindFans] = useState(false);
 
   const stopFerrisWheel = () => {
-    const duration = 5; // Duration in seconds for the wheel to stop
+    setIsStoppingFerrisWheel(true);
+    const duration = 3; // Duration in seconds for the wheel to stop
     const frameRate = 60; // Assuming 60 frames per second
     let framesCount = duration * frameRate;
     let initialSpeed = ferrisWheelSpeed;
@@ -29,6 +34,7 @@ function Scene() {
         framesCount--;
         if (framesCount <= 0 || prevSpeed <= 0) {
           clearInterval(interval);
+          setIsStoppingFerrisWheel(false);
           return 0;
         }
         // Linearly decrease the speed
@@ -38,7 +44,8 @@ function Scene() {
   };
 
   const stopWindFans = () => {
-    const duration = 5; // Duration in seconds for the fans to stop
+    setIsStoppingWindFans(true);
+    const duration = 3; // Duration in seconds for the fans to stop
     const frameRate = 60; // Assuming 60 frames per second
     let framesCount = duration * frameRate;
     let initialSpeed = windFanSpeed;
@@ -48,6 +55,7 @@ function Scene() {
         framesCount--;
         if (framesCount <= 0 || prevSpeed <= 0) {
           clearInterval(interval);
+          setIsStoppingWindFans(false);
           return 0;
         }
         return initialSpeed * (framesCount / (duration * frameRate));
@@ -55,27 +63,23 @@ function Scene() {
     }, 1000 / frameRate); // Update speed every frame
   };  
 
-  const toggleLights = () => {
-    if (lightsOn) {
-      stopFerrisWheel();
-      stopWindFans(); // Add this line
+  const toggleEnergy = () => {
+    setIsEnergyOn(!isEnergyOn);
+    if (!isEnergyOn) {
+      setWindFanSpeed(0.1); // Start wind fans
     } else {
-      setFerrisWheelSpeed(0.03);
-      setWindFanSpeed(0.1); // Reset wind fan speed
+      stopWindFans(); // Stop wind fans
     }
-    setLightsOn(!lightsOn);
   };
 
-  const toggleEnergy = (energyStatus) => {
-    if (energyStatus) {
-      // Starting energy production
-      setWindFanSpeed(0.1);
+  const toggleLights = () => {
+    setAreLightsOn(!areLightsOn);
+    if (!areLightsOn) {
+      setFerrisWheelSpeed(0.007); // Start Ferris wheel
     } else {
-      // Stopping energy production
-      stopWindFans();
+      stopFerrisWheel(); // Stop Ferris wheel
     }
   };
-  
 
   // useEffect(() => {
   //   // Synchronize the position of the visual sun with the directional light
@@ -178,7 +182,7 @@ function Scene() {
           <Model
             ref={modelRef}
             setButtonText={setButtonText}
-            lightsOn={lightsOn}
+            lightsOn={areLightsOn}
             ferrisWheelSpeed={ferrisWheelSpeed}
             windFanSpeed={windFanSpeed}
           />
@@ -189,7 +193,14 @@ function Scene() {
           <span className='text-xl uppercase font-semibold'>{buttonText}</span>
         </div>
       )}
-      <ControlPanel onToggleLights={toggleLights} onToggleEnergy={toggleEnergy} />
+      <ControlPanel
+        onToggleLights={toggleLights}
+        onToggleEnergy={toggleEnergy}
+        isEnergyStopping={isStoppingWindFans}
+        isLightsStopping={isStoppingFerrisWheel}
+        isEnergyOn={isEnergyOn}
+        areLightsOn={areLightsOn}
+      />
     </div>
   );
 }
