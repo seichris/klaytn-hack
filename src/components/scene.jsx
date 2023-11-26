@@ -21,49 +21,92 @@ function Scene() {
   const [areLightsOn, setAreLightsOn] = useState(true);
   const [isStoppingFerrisWheel, setIsStoppingFerrisWheel] = useState(false);
   const [isStoppingWindFans, setIsStoppingWindFans] = useState(false);
-  const [windfarm, setWindfarm] = useState({ coins: 100.00, energyTokens: 100.00 });
+  const [windfarm, setWindfarm] = useState({ coins: 100.00, energyTokens: "∞" });
   const [city, setCity] = useState({ coins: 1000.00, energyTokens: 100.00 });
   // "∞"
   const decimalUpdateInterval = 1000; // 1 second for decimal updates
   const fullUpdateInterval = 5000; // 5 seconds for full unit updates
 
+  // const updateDecimals = () => {
+  //   if (isEnergyOn) {
+  //     setCity(prevCity => ({
+  //       ...prevCity,
+  //       coins: parseFloat((prevCity.coins - 0.2).toFixed(2))
+  //     }));
+  //     setWindfarm(prevWindfarm => ({
+  //       ...prevWindfarm,
+  //       coins: parseFloat((prevWindfarm.coins + 0.2).toFixed(2))
+  //     }));
+  //   }
+  // };
   const updateDecimals = () => {
-    // Logic for updating decimal part
-    setCity(prevCity => ({
-      coins: parseFloat((prevCity.coins - 0.2).toFixed(2)), // Adjust the decrement value as needed
-      energyTokens: parseFloat((prevCity.energyTokens + 0.2).toFixed(2)) // Adjust the increment value as needed
-    }));
-    setWindfarm(prevWindfarm => ({
-      ...prevWindfarm,
-      coins: parseFloat((prevWindfarm.coins + 0.2).toFixed(2)) // Adjust the increment value as needed
-    }));
+    setCity(prevCity => {
+      let newCoins = prevCity.coins;
+      let newEnergyTokens = prevCity.energyTokens;
+  
+      if (isEnergyOn) {
+        newCoins -= 0.2; // Decrease coins by a decimal value if energy is on
+        if (!areLightsOn) {
+          newEnergyTokens += 0.2; // Increase energy tokens by a decimal if energy is on and lights are off
+        }
+      } else if (areLightsOn) {
+        newEnergyTokens -= 0.2; // Decrease energy tokens by a decimal if only lights are on
+      }
+  
+      return {
+        coins: parseFloat(newCoins.toFixed(2)),
+        energyTokens: parseFloat(newEnergyTokens.toFixed(2))
+      };
+    });
+  
+    if (isEnergyOn) {
+      setWindfarm(prevWindfarm => ({
+        ...prevWindfarm,
+        coins: parseFloat((prevWindfarm.coins + 0.2).toFixed(2)) // Increase windfarm coins by a decimal if energy is on
+      }));
+    }
   };
   
+  
   const updateFullUnit = () => {
-    // Logic for updating full unit
-    setCity(prevCity => ({
-      coins: parseFloat((prevCity.coins - 1).toFixed(2)),
-      energyTokens: parseFloat((prevCity.energyTokens + (areLightsOn ? -1 : 1)).toFixed(2)) // Decrease if lights are on
-    }));
-    setWindfarm(prevWindfarm => ({
-      ...prevWindfarm,
-      coins: parseFloat((prevWindfarm.coins + 1).toFixed(2))
-    }));
+    setCity(prevCity => {
+      let newCoins = parseFloat((prevCity.coins - 1).toFixed(2));
+      let newEnergyTokens = prevCity.energyTokens;
+  
+      if (isEnergyOn) {
+        newCoins -= 1; // Decrease coins if energy is on
+        if (!areLightsOn) {
+          newEnergyTokens += 1; // Increase energy tokens if energy is on and lights are off
+        }
+      } else if (areLightsOn) {
+        newEnergyTokens -= 1; // Decrease energy tokens if only lights are on
+      }
+  
+      return {
+        coins: parseFloat(newCoins.toFixed(2)),
+        energyTokens: parseFloat(newEnergyTokens.toFixed(2))
+      };
+    });
+  
+    if (isEnergyOn) {
+      setWindfarm(prevWindfarm => ({
+        ...prevWindfarm,
+        coins: parseFloat((prevWindfarm.coins + 1).toFixed(2)) // Increase windfarm coins if energy is on
+      }));
+    }
   };
   
   useEffect(() => {
-    let decimalInterval, fullUnitInterval;
-    if (isEnergyOn) {
-      decimalInterval = setInterval(updateDecimals, decimalUpdateInterval);
-      fullUnitInterval = setInterval(updateFullUnit, fullUpdateInterval);
-    }
+    const decimalInterval = setInterval(updateDecimals, decimalUpdateInterval);
+    return () => clearInterval(decimalInterval);
+  }, [isEnergyOn, areLightsOn]);
   
-    return () => {
-      clearInterval(decimalInterval);
-      clearInterval(fullUnitInterval);
-    };
-  }, [isEnergyOn, areLightsOn]);  
- 
+  
+  useEffect(() => {
+    const fullUnitInterval = setInterval(updateFullUnit, fullUpdateInterval);
+  
+    return () => clearInterval(fullUnitInterval);
+  }, [isEnergyOn, areLightsOn]);
 
   const stopFerrisWheel = () => {
     setIsStoppingFerrisWheel(true);
