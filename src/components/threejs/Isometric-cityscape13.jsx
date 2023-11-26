@@ -30,8 +30,9 @@ export function Model(props) {
   const mouse = new THREE.Vector2();
   const initialCameraPosition = { x: 5, y: 5.5, z: -15 };
   const [isInitialPosition, setIsInitialPosition] = useState(true);
-  const windowMaterial = useMemo(() => 
-    props.lightsOn ? materials.WindowLightBlue : materials.BlackoutWindow,
+  const windowMaterial = useMemo(
+    () =>
+      props.lightsOn ? materials.WindowLightBlue : materials.BlackoutWindow,
     [props.lightsOn]
   );
 
@@ -45,17 +46,17 @@ export function Model(props) {
     const sunGeometry = new THREE.SphereGeometry(1, 32, 32);
     // Create a basic material with emissive color for the sun
     // const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffcc00, emissive: 0xffcc00 });
-    const sunMaterial = new THREE.MeshBasicMaterial({ 
-      color: 0xFFFF00, // Bright yellow color
-      emissive: 0xFFFF00, // Emissive color to make it glow
+    const sunMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffff00, // Bright yellow color
+      emissive: 0xffff00, // Emissive color to make it glow
       emissiveIntensity: 1.5, // Increase emissive intensity
     });
-    const spriteMaterial = new THREE.SpriteMaterial({ 
-      map: new THREE.TextureLoader().load('/path-to-glow-texture.png'),
+    const spriteMaterial = new THREE.SpriteMaterial({
+      map: new THREE.TextureLoader().load("/path-to-glow-texture.png"),
       transparent: true,
-      blending: THREE.AdditiveBlending
+      blending: THREE.AdditiveBlending,
     });
-    const sunLight = new THREE.DirectionalLight(0xFFFFAA, 1);
+    const sunLight = new THREE.DirectionalLight(0xffffaa, 1);
     const sprite = new THREE.Sprite(spriteMaterial);
     sprite.scale.set(10, 10, 1);
     const sunScale = 1.5;
@@ -71,8 +72,6 @@ export function Model(props) {
     if (buildingRef.current) {
       buildingRef.current.add(sunMesh);
     }
-
-    
 
     // Cleanup: remove the sun from the model when the component unmounts
     return () => {
@@ -202,14 +201,14 @@ export function Model(props) {
     if (ferrisWheelRef.current) {
       ferrisWheelRef.current.rotation.y += props.ferrisWheelSpeed;
     }
-  
+
     // Wind fans rotation
     windFanRefs.forEach((ref) => {
       if (ref.current) {
         ref.current.rotation.z += props.windFanSpeed;
       }
     });
-  }); 
+  });
 
   const handlePointerMove = (e) => {
     getMousePosition(e); // Getting the mouse position
@@ -273,17 +272,17 @@ export function Model(props) {
           material={materials["Landscape_color_1.001"]}
         />
         <mesh
-          name='cursor'
+          name="cursor"
           geometry={nodes.Landskape_plane_Landscape_color_1_0002_1.geometry}
           material={materials.StreetGrey}
         />
         <mesh
-          name='cursor'
+          name="cursor"
           geometry={nodes.Landskape_plane_Landscape_color_1_0002_2.geometry}
           material={materials["TreeGreen.005"]}
         />
         <mesh
-          name='cursor'
+          name="cursor"
           geometry={nodes.Landskape_plane_Landscape_color_1_0002_3.geometry}
           material={materials["TreeGreen.005"]}
         />
@@ -438,7 +437,7 @@ export function Model(props) {
         />
 
         <group
-          name='model'
+          name="model"
           position={[0.4, 0.36, 0.53]}
           rotation={[0, Math.PI / 2, 0]}
           scale={0.65}
@@ -470,7 +469,7 @@ export function Model(props) {
           />
         </group>
         <group
-          name='model'
+          name="model"
           position={[3.7, 1.49, -3.29]}
           rotation={[Math.PI / 2, 1.57, 0]}
           scale={[-1, 0.15, 1]}
@@ -513,38 +512,38 @@ export function Model(props) {
             ref={ferrisWheelRef}
           />
         </group>
-        <group position={[3.25, 0.36, 2.93]} scale={0.65} name='model'>
+        <group position={[3.25, 0.36, 2.93]} scale={0.65} name="model">
           <mesh
-            name='building2'
+            name="building2"
             geometry={nodes.CircleBuildBase004.geometry}
             material={materials.CircularBuildMain}
           />
           <mesh
-            name='building2'
+            name="building2"
             geometry={nodes.CircleBuildBase004_1.geometry}
             material={windowMaterial}
           />
           <mesh
-            name='building2'
+            name="building2"
             geometry={nodes.CircleBuildBase004_2.geometry}
             material={materials.BuildingOrange}
           />
           <mesh
-            name='building2'
+            name="building2"
             geometry={nodes.CircleBuildBase004_3.geometry}
             material={materials.BlackoutWindow}
           />
           <mesh
-            name='building2'
+            name="building2"
             geometry={nodes.CircleBuildBase004_4.geometry}
             material={materials.Metal}
           />
           <mesh
-            name='building2'
+            name="building2"
             geometry={nodes.CircleBuildBase004_5.geometry}
             material={materials.LightOrange}
           />
-          <group name='building2' position={[0, 1.54, 0]}>
+          <group name="building2" position={[0, 1.54, 0]}>
             <mesh
               geometry={nodes.Circle017.geometry}
               material={materials.Metal}
@@ -603,10 +602,7 @@ export function Model(props) {
             geometry={nodes.Cube040_1.geometry}
             material={materials.LightOrange}
           />
-          <mesh
-            geometry={nodes.Cube040_2.geometry}
-            material={windowMaterial}
-          />
+          <mesh geometry={nodes.Cube040_2.geometry} material={windowMaterial} />
           <mesh
             geometry={nodes.Cube040_3.geometry}
             material={materials.BlackoutWindow}
@@ -633,7 +629,7 @@ export function Model(props) {
           />
         </group>
         <group
-          name='model'
+          name="model"
           position={[2.91, 0.36, 0.55]}
           rotation={[0, -Math.PI / 2, 0]}
           scale={0.54}
@@ -642,10 +638,7 @@ export function Model(props) {
             geometry={nodes.Cube043.geometry}
             material={materials.CircularBuildMain}
           />
-          <mesh
-            geometry={nodes.Cube043_1.geometry}
-            material={windowMaterial}
-          />
+          <mesh geometry={nodes.Cube043_1.geometry} material={windowMaterial} />
           <mesh
             geometry={nodes.Cube043_2.geometry}
             material={materials.BuildingGreen}
@@ -679,15 +672,12 @@ export function Model(props) {
             material={materials.BuildingRed}
           />
         </group>
-        <group name='model' position={[-3.02, 0.36, 0.95]} scale={0.54}>
+        <group name="model" position={[-3.02, 0.36, 0.95]} scale={0.54}>
           <mesh
             geometry={nodes.Cube046.geometry}
             material={materials.OldBrick}
           />
-          <mesh
-            geometry={nodes.Cube046_1.geometry}
-            material={windowMaterial}
-          />
+          <mesh geometry={nodes.Cube046_1.geometry} material={windowMaterial} />
           <mesh
             geometry={nodes.Cube046_2.geometry}
             material={materials.CircularBuildMain}
@@ -717,7 +707,7 @@ export function Model(props) {
             material={materials.DarkMetal}
           />
         </group>
-        <group name='model' position={[0.71, 0.36, 3.32]} scale={0.54}>
+        <group name="model" position={[0.71, 0.36, 3.32]} scale={0.54}>
           <mesh
             geometry={nodes.Cube049.geometry}
             material={materials.SquareBlockMain}
@@ -730,10 +720,7 @@ export function Model(props) {
             geometry={nodes.Cube049_2.geometry}
             material={materials.BuildingLightBlue}
           />
-          <mesh
-            geometry={nodes.Cube049_3.geometry}
-            material={windowMaterial}
-          />
+          <mesh geometry={nodes.Cube049_3.geometry} material={windowMaterial} />
           <mesh
             geometry={nodes.Cube049_4.geometry}
             material={materials.BuildingDarkBlue}
@@ -763,7 +750,7 @@ export function Model(props) {
             material={materials.Metal}
           />
         </group>
-        <group position={[1.28, 0.36, -2.04]} scale={0.54} name='model'>
+        <group position={[1.28, 0.36, -2.04]} scale={0.54} name="model">
           <mesh
             geometry={nodes.Cube052.geometry}
             material={materials.SquareBlockMain}
@@ -772,10 +759,7 @@ export function Model(props) {
             geometry={nodes.Cube052_1.geometry}
             material={materials.LightOrange}
           />
-          <mesh
-            geometry={nodes.Cube052_2.geometry}
-            material={windowMaterial}
-          />
+          <mesh geometry={nodes.Cube052_2.geometry} material={windowMaterial} />
           <mesh
             geometry={nodes.Cube052_3.geometry}
             material={materials.BlackoutWindow}
@@ -801,101 +785,101 @@ export function Model(props) {
             material={materials.Air_conditioning}
           />
         </group>
-        <group name='model' position={[4.3, 0.36, -1.67]} scale={0.54}>
+        <group name="model" position={[4.3, 0.36, -1.67]} scale={0.54}>
           <mesh
-            name='building3'
+            name="building3"
             geometry={nodes.Cube005_1.geometry}
             material={materials.SquareBlockMain}
           />
           <mesh
-            name='building3'
+            name="building3"
             geometry={nodes.Cube005_2.geometry}
             material={materials.LightOrange}
           />
           <mesh
-            name='building3'
+            name="building3"
             geometry={nodes.Cube005_3.geometry}
             material={windowMaterial}
           />
           <mesh
-            name='building3'
+            name="building3"
             geometry={nodes.Cube005_4.geometry}
             material={materials.BlackoutWindow}
           />
           <mesh
-            name='building3'
+            name="building3"
             geometry={nodes.Cube005_5.geometry}
             material={materials.BuildingRed}
           />
           <mesh
-            name='building3'
+            name="building3"
             geometry={nodes.Cube005_6.geometry}
             material={materials.OldBrick}
           />
           <mesh
-            name='building3'
+            name="building3"
             geometry={nodes.Cube005_7.geometry}
             material={materials.DarkMetal}
           />
           <mesh
-            name='building3'
+            name="building3"
             geometry={nodes.Cube005_8.geometry}
             material={materials.CircularBuildMain}
           />
           <mesh
-            name='building3'
+            name="building3"
             geometry={nodes.Cube005_9.geometry}
             material={materials.Metal}
           />
           <mesh
-            name='building3'
+            name="building3"
             geometry={nodes.Cube005_10.geometry}
             material={windowMaterial}
           />
           <mesh
-            name='building3'
+            name="building3"
             geometry={nodes.Cube005_11.geometry}
             material={materials.BuildingWhite}
           />
         </group>
-        <group position={[-0.36, 0.36, -3.56]} scale={0.65} name='model'>
+        <group position={[-0.36, 0.36, -3.56]} scale={0.65} name="model">
           <mesh
-            name='building1'
+            name="building1"
             geometry={nodes.CircleBuildBase002_1.geometry}
             material={materials.CircularBuildMain}
           />
           <mesh
-            name='building1'
+            name="building1"
             geometry={nodes.CircleBuildBase002_2.geometry}
             material={windowMaterial}
           />
           <mesh
-            name='building1'
+            name="building1"
             geometry={nodes.CircleBuildBase002_3.geometry}
             material={materials.BlackoutWindow}
           />
           <mesh
-            name='building1'
+            name="building1"
             geometry={nodes.CircleBuildBase002_4.geometry}
             material={materials.Metal}
           />
           <mesh
-            name='building1'
+            name="building1"
             geometry={nodes.CircleBuildBase002_5.geometry}
             material={materials.BuildingRed}
           />
           <mesh
-            name='building1'
+            name="building1"
             geometry={nodes.CircleBuildBase002_6.geometry}
             material={materials.BuildingWhite}
           />
           <mesh
-            name='building1'
+            name="building1"
             geometry={nodes.CircleBuildBase002_7.geometry}
             material={materials.DarkMetal}
           />
         </group>
-        <group position={[-2.39, 0.36, -3.05]} name='model'>
+        <group position={[-2.39, 0.36, -3.05]} name="model">
           <mesh
             geometry={nodes.Cube038.geometry}
             material={materials.BuildingDarkBlue}
@@ -904,24 +888,18 @@ export function Model(props) {
             geometry={nodes.Cube038_1.geometry}
             material={materials.BlackoutWindow}
           />
-          <mesh
-            geometry={nodes.Cube038_2.geometry}
-            material={windowMaterial}
-          />
+          <mesh geometry={nodes.Cube038_2.geometry} material={windowMaterial} />
           <mesh
             geometry={nodes.Cube038_3.geometry}
             material={materials.BlackoutWindow}
           />
         </group>
-        <group position={[-1.33, 1.25, 1.5]} name='model '>
+        <group position={[-1.33, 1.25, 1.5]} name="model ">
           <mesh
             geometry={nodes.Cone003.geometry}
             material={materials.BuildingDarkBlue}
           />
-          <mesh
-            geometry={nodes.Cone003_1.geometry}
-            material={windowMaterial}
-          />
+          <mesh geometry={nodes.Cone003_1.geometry} material={windowMaterial} />
           <mesh
             geometry={nodes.Cone003_2.geometry}
             material={materials.DarkMetal}
@@ -955,7 +933,7 @@ export function Model(props) {
         </group>
 
         <group
-          name='cursor'
+          name="cursor"
           position={[1.71, 0.36, 0.36]}
           scale={[0.36, 0.65, 4.9]}
         >
@@ -970,7 +948,7 @@ export function Model(props) {
         </group>
 
         <mesh
-          name='cursor'
+          name="cursor"
           geometry={nodes.CityBase002.geometry}
           material={materials.Metal}
           position={[3.89, 0.47, -3.45]}

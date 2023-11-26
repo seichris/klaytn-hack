@@ -15,19 +15,18 @@ function Helicopter() {
   // Circle parameters
   const circleRadius = 20;
   const circleCenter = new THREE.Vector3(0, 5, 0);
-  let angle = 0;
+  const angleRef = useRef(0);
 
   useFrame(() => {
-    // Slow down the movement by reducing the angle increment
-    angle += 0.01 / 3;
+    // Update angle
+    angleRef.current += 0.01 / 3;
 
     // Update position
-    helicopterRef.current.position.x = circleCenter.x + circleRadius * Math.cos(angle);
-    helicopterRef.current.position.z = circleCenter.z + circleRadius * Math.sin(angle);
+    helicopterRef.current.position.x = circleCenter.x + circleRadius * Math.cos(angleRef.current);
+    helicopterRef.current.position.z = circleCenter.z + circleRadius * Math.sin(angleRef.current);
 
     // Update rotation to face the forward direction
-    // Adjust the offset based on the model's forward direction
-    helicopterRef.current.rotation.y = -angle;
+    helicopterRef.current.rotation.y = -angleRef.current;
 
     // Update rotor rotation
     const helice = gltf.scene.getObjectByName("Helice");
@@ -48,3 +47,4 @@ function Helicopter() {
 }
 
 export default Helicopter;
+
