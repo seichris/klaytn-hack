@@ -24,3 +24,6 @@ We chose the Klaytn blockchain for this simulation due to its high performance, 
 ## Simulation as a Real-World Analogy
 This simulation serves as a proof-of-concept for how blockchain technology can revolutionize the trading of RWAs. By tokenizing energy as an asset on the blockchain, we can create a more efficient, transparent, and decentralized market for energy trading. This not only opens up new avenues for energy distribution but also paves the way for integrating various RWAs into the blockchain ecosystem, enhancing liquidity and accessibility.
 
+## Contracts
+
+The latest version of our decentralized RWA energy exchange contract is deployed at 0x32b898222777a6415d3dc0f8c79918754e202405 on Klaytn testnet.

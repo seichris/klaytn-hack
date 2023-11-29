@@ -36,10 +36,9 @@ export function Model(props) {
     [props.lightsOn]
   );
 
-  useEffect(() => {
-    console.log("GLTF Nodes:", nodes);
-    // Rest of your code
-  }, [nodes]);
+  // useEffect(() => {
+  //   console.log("GLTF Nodes:", nodes);
+  // }, [nodes]);
 
   useEffect(() => {
     // Create a sphere geometry for the sun
