@@ -3,23 +3,30 @@ import { useAccount, useConnect, useBalance, useNetwork, useSwitchNetwork } from
 import { InjectedConnector } from 'wagmi/connectors/injected';
 
 const ConnectWalletButton = () => {
+  const klaytnTestnetChainId = 1001; // Klaytn Testnet Chain ID
   const { isConnected, address } = useAccount();
   const { connect } = useConnect({
     connector: new InjectedConnector(),
   });
-  const { data: balanceData, isError, isLoading, error } = useBalance({
-    addressOrName: address,
-    watch: isConnected, // Update balance when the connection status changes
-  });
   const { chain } = useNetwork();
   const { switchNetwork } = useSwitchNetwork();
-
-  // Klaytn testnet chain ID (replace with the actual ID)
-  const klaytnTestnetChainId = 1001;
+  const { data: balanceData, isError, isLoading } = useBalance({
+    addressOrName: address,
+    chainId: klaytnTestnetChainId,
+    watch: isConnected,
+  });
 
   useEffect(() => {
-    if (isConnected && chain?.id !== klaytnTestnetChainId) {
-      switchNetwork?.(klaytnTestnetChainId);
+    console.log('Address:', address);
+    console.log('Chain ID:', chain?.id);
+    console.log('Balance Data:', balanceData);
+    console.log('Is Error:', isError);
+    console.log('Is Loading:', isLoading);
+  }, [address, chain, balanceData, isError, isLoading]);
+
+  useEffect(() => {
+    if (isConnected && chain?.id !== klaytnTestnetChainId && switchNetwork) {
+      switchNetwork(klaytnTestnetChainId);
     }
   }, [isConnected, chain, switchNetwork]);
 
@@ -30,15 +37,6 @@ const ConnectWalletButton = () => {
       console.error('Error connecting wallet:', error);
     }
   };
-
-  useEffect(() => {
-    console.log('Balance Data:', balanceData);
-    console.log('Is Error:', isError);
-    console.log('Is Loading:', isLoading);
-    if (error) {
-      console.error('Balance Fetch Error:', error);
-    }
-  }, [balanceData, isError, isLoading, error]);
 
   return (
     <div className="control-panel">
