@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useContractWrite, usePublicClient, usePrepareContractWrite  } from "wagmi";
+import {
+  useContractWrite,
+  usePublicClient,
+  usePrepareContractWrite,
+  useSendTransaction,
+} from "wagmi";
 import { getContract } from "wagmi/actions";
 import { ethers } from "ethers";
 import ConnectWalletButton from "./ConnectWalletButton";
@@ -135,17 +140,17 @@ export function ControlPanel({
   isConnected,
   setCity,
 }) {
-
   // Prepare the contract write
   const { config } = usePrepareContractWrite({
     address: contractAddress,
     abi: contractABI,
     functionName: "sendCoins",
-    args: [10], // Example args
-    overrides: {
-      maxPriorityFeePerGas: ethers.parseUnits("2", "gwei"), // Adjust based on current network conditions
-      maxFeePerGas: ethers.parseUnits("100", "gwei"), // Adjust based on current network conditions
-    },
+    args: [1],
+    maxPriorityFeePerGas: ethers.parseUnits("2", "gwei"),
+    maxFeePerGas: ethers.parseUnits("100", "gwei"),
+    // gas: ethers.parseUnits("21000", "wei"),
+    gas: 1142069n,
+    gasLimit: 1142069n,
   });
 
   // Use the prepared config in contract write
@@ -155,35 +160,61 @@ export function ControlPanel({
   const handleFundCity = () => {
     if (write) {
       write();
-      // Additional logic if needed
+      setCity((prevCity) => ({
+        ...prevCity,
+        coins: prevCity.coins + 10,
+      }));
     }
   };
 
-  // const { write: fundCityWrite } = useContractWrite({
-  //   address: contractAddress,
-  //   abi: contractABI,
-  //   functionName: 'fundCity',
-  //   args: [10], // Example args
-  //   overrides: {
-  //     maxPriorityFeePerGas: ethers.utils.parseUnits('2', 'gwei'), // Adjust based on current network conditions
-  //     maxFeePerGas: ethers.utils.parseUnits('100', 'gwei'), // Adjust based on current network conditions
+
+  const { sendTransaction } = useSendTransaction();
+
+  const fundCity = async () => {
+    if (!contractAddress) {
+      console.error("Contract address is not defined");
+      return;
+    }
+
+    try {
+      const transaction = await sendTransaction({
+        to: contractAddress, // Contract address
+        value: ethers.parseEther("10"), // 10 KLAY
+        gas: 42069n,
+      });
+
+      console.log("Transaction sent:", transaction);
+
+      // Update city's coin balance
+      setCity((prevCity) => ({
+        ...prevCity,
+        coins: prevCity.coins + 10,
+      }));
+    } catch (error) {
+      console.error("Error sending transaction:", error);
+    }
+  };
+
+  // const { sendTransaction } = useSendTransaction({
+  //   request: {
+  //     to: contractAddress,
+  //     value: ethers.parseEther('10'), // Amount to send (10 KLAY in this case)
   //   },
   // });
 
-  // const handleFundCity = async () => {
-  //   if (!isConnected) return;
+  // const fundCity = async () => {
   //   try {
-  //     await fundCityWrite();
-  //   } catch (error) {
-  //     console.error('Error funding city:', error);
-  //   }
-  // };
+  //     const transaction = await sendTransaction();
+  //     console.log('Transaction sent:', transaction);
 
-  // const fundCity = () => {
-  //   setCity(prevCity => ({
-  //     ...prevCity,
-  //     coins: prevCity.coins + 10
-  //   }));
+  //     // Update the city's coin balance in the frontend
+  //     setCity(prevCity => ({
+  //       ...prevCity,
+  //       coins: prevCity.coins + 10
+  //     }));
+  //   } catch (error) {
+  //     console.error('Error sending transaction:', error);
+  //   }
   // };
 
   return (
