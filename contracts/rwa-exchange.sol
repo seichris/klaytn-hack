@@ -9,7 +9,7 @@ contract EnergyTrading {
     mapping(address => uint256) public coinBalances;
 
     constructor() {
-        windfarm = msg.sender; // The contract deployer is considered the windfarm
+        windfarm = msg.sender; // The contract deployer is the windfarm
         energyBalances[windfarm] = 1000; // Initial energy tokens for the windfarm
         coinBalances[city] = 1000; // Initial coins for the city
     }
@@ -32,5 +32,12 @@ contract EnergyTrading {
         require(coinBalances[city] >= amount, "Insufficient coins");
         coinBalances[city] -= amount;
         coinBalances[windfarm] += amount;
+    }
+
+    // Function to fund the city with KLAY
+    function fundCity() external payable {
+        require(msg.value > 0, "Must send some KLAY to fund the city");
+        // Convert KLAY to coins (assuming 1 KLAY = 1 Coin for simplicity)
+        coinBalances[city] += msg.value;
     }
 }

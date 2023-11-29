@@ -26,4 +26,4 @@ This simulation serves as a proof-of-concept for how blockchain technology can r
 
 ## Contracts
 
-Our contract is deployed at 0x90c1e588ee83f0f053fa1c66d26d6f9d8c88aeb8 on Klaytn testnet.
+The latest version of our decentralized RWA energy exchange contract is deployed at 0x32b898222777a6415d3dc0f8c79918754e202405 on Klaytn testnet.
