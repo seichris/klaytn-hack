@@ -1,13 +1,17 @@
+import React from 'react';
+// import { useAccount } from 'wagmi';
 import Scene from "./components/scene";
-// import ConnectWalletButton from './components/ConnectWalletButton';
 import { WagmiConfig } from "wagmi";
 import config from "./lib/wagmiConfig";
 
 function App() {
+  // const { isConnected } = useAccount();
+
   return (
     <WagmiConfig config={config}>
       <div>
-        {/* <ConnectWalletButton /> */}
+        {/* Pass isConnected to Scene */}
+        {/* <Scene isConnected={isConnected} /> */}
         <Scene />
       </div>
     </WagmiConfig>

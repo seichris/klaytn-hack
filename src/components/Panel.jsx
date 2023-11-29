@@ -10,7 +10,17 @@ export function ControlPanel({
   areLightsOn,
   windfarm,
   city,
+  isConnected,
+  setCity,
 }) {
+
+  const fundCity = () => {
+    setCity(prevCity => ({
+      ...prevCity,
+      coins: prevCity.coins + 10
+    }));
+  };
+
   return (
     <div>
       <div className="panel-box-left">
@@ -18,6 +28,13 @@ export function ControlPanel({
       </div>
       <div className="panel-box-right">
         <div className="control-panel">
+          <button
+            onClick={fundCity}
+            disabled={!isConnected}
+            className={`fund-button ${isConnected ? "active" : ""}`}
+           >
+            Fund City with KLAY
+          </button>
           <button
             onClick={onToggleEnergy}
             disabled={isEnergyStopping}
@@ -34,8 +51,8 @@ export function ControlPanel({
           </button>
         </div>
         <div className="status-display">
-          <p>Windfarm: {windfarm.coins.toFixed(2)} coins, {windfarm.energyTokens} energy tokens</p>
-          <p>City: {city.coins.toFixed(2)} coins, {city.energyTokens.toFixed(2)} energy tokens</p>
+          <p>Windfarm: {windfarm.coins.toFixed(2)} KLAY, {windfarm.energyTokens} energy RWA tokens</p>
+          <p>City: {city.coins.toFixed(2)} KLAY, {city.energyTokens.toFixed(2)} energy RWA tokens</p>
         </div>
       </div>
     </div>

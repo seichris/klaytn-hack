@@ -6,8 +6,6 @@ import { klaytn } from 'wagmi/chains'
 // import { WalletConnectConnector } from 'wagmi/connectors/WalletConnectConnector';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 
-
-// Klaytn network configuration
 const klaytnChain = {
   id: 1001, // Replace with Klaytn's network ID
   name: "Klaytn",

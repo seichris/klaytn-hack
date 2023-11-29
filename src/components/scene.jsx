@@ -6,11 +6,13 @@ import { Sky, Cloud } from "@react-three/drei";
 import { Model } from "./threejs/Isometric-cityscape13";
 import { ControlPanel } from "./Panel";
 import Loader from "./Loader";
+import { useAccount } from 'wagmi';
 // import { MeshBasicMaterial, SphereGeometry, Mesh } from 'three';
 import { Environment } from "@react-three/drei";
 
 function Scene() {
   const [buttonText, setButtonText] = useState(null);
+  const { isConnected } = useAccount();
   const modelRef = useRef();
   const sunLightRef = useRef();
   const sunVisualRef = useRef();
@@ -200,6 +202,13 @@ function Scene() {
     }
   }, []);
 
+  const fundCity = () => {
+    setCity(prevCity => ({
+      ...prevCity,
+      coins: prevCity.coins + 10
+    }));
+  };
+
   // useEffect(() => {
   //   const gui = new dat.GUI();
   //   gui.add(skySettings, 'inclination', 0, 1).onChange(value => setSkySettings(s => ({ ...s, inclination: value })));
@@ -288,6 +297,8 @@ function Scene() {
         areLightsOn={areLightsOn}
         windfarm={windfarm}
         city={city}
+        isConnected={isConnected}
+        setCity={setCity}
       />
     </div>
   );
