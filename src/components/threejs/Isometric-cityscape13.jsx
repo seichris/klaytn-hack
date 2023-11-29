@@ -229,11 +229,11 @@ export function Model(props) {
       if (name === "model" || name === "cursor") {
         document.body.style.cursor = `url('/ring.png') 16 16, auto`;
         if (objectName === "building1") {
-          props.setButtonText("Recruitments");
+          props.setButtonText("Bank");
         } else if (objectName === "building2") {
-          props.setButtonText("Contact Us");
+          props.setButtonText("Klaytn HQ");
         } else if (objectName === "building3") {
-          props.setButtonText("About Us");
+          props.setButtonText("Government");
         } else {
           props.setButtonText(null);
         }
