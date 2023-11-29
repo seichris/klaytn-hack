@@ -81,15 +81,21 @@ button:focus-visible {
   }
 }
 
-.panel-box {
+.panel-box-right {
   position: absolute;
   top: 10px;
   right: 10px;
 }
 
+.panel-box-left {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
 .control-panel button {
-  background-color: black;
-  color: white;
+  background-color: #1f1e1e;
+  color: #f2f1c4;
   transition: background-color 3s, color 3s;
   margin: 0 10px; /* Add 10px margin on the left and right */
   padding: 5px 10px; /* Reduce the size by decreasing padding */
@@ -99,8 +105,8 @@ button:focus-visible {
 }
 
 .control-panel button.active {
-  background-color: white;
-  color: black;
+  background-color: #f2f1c4;
+  color: #1f1e1e;
 }
 
 .control-panel {
